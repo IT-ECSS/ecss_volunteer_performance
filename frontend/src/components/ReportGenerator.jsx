@@ -65,6 +65,7 @@ class ReportGenerator extends Component {
       name: row.name,
       staffName: row.staffName,
       paymentRef: row.paymentRef,
+      ticketType: row.ticketType,
       bookingNo: row.bookingNo,
       seats: Array.isArray(row.seats) ? row.seats.join(', ') : String(row.seats),
       bookedAt: row.time
@@ -76,6 +77,7 @@ class ReportGenerator extends Component {
       'Name',
       'Staff',
       'Contact Number',
+      'Ticket Type',
       'Booking No',
       'Seats',
       'Booked At'
@@ -87,6 +89,7 @@ class ReportGenerator extends Component {
       'name',
       'staffName',
       'paymentRef',
+      'ticketType',
       'bookingNo',
       'seats',
       'bookedAt'

@@ -1,6 +1,11 @@
 import React, { Component } from 'react';
 import './RegistrationForm.css';
 
+const TICKET_TYPES = [
+  "Performers",
+  "Guest"
+];
+
 function formatSeatLabel(seat) {
   // If already in format 'A01', return as is
   if (/^[A-Z]\d{2}$/.test(seat)) return seat;
@@ -50,7 +55,7 @@ class RegistrationForm extends Component {
     this.state = {
       name: '',
       staffName: '', // Empty - user must select
-      location: '',
+      ticketType: '',
       paymentRef: '',
       showPriceError: false, // <-- add this
     };
@@ -70,6 +75,10 @@ class RegistrationForm extends Component {
     this.setState({ [name]: value });
   };
 
+  handleTicketTypeChange = (e) => {
+    this.setState({ ticketType: e.target.value });
+  };
+
   handlePaymentRefChange = (e) => {
     this.setState({ paymentRef: e.target.value });
   };
@@ -85,20 +94,21 @@ class RegistrationForm extends Component {
   handleSubmit = (e) => {
     console.log("Submitting form...");
     e.preventDefault();
-    let { name, paymentRef, staffName } = this.state;
+    let { name, paymentRef, staffName, ticketType } = this.state;
     const { selectedSeatsCount, reservedSeats } = this.props;
     name = toTitleCase(name.trim());
   
-    // Simplified validation - no price validation needed
-    if (!name || !paymentRef || !staffName || selectedSeatsCount === 0) {
-      console.log("Form validation failed:", { name, paymentRef, staffName, selectedSeatsCount });
-      alert("Please fill in all fields and select at least one seat.");
+    // Enhanced validation - include ticket type
+    if (!name || !paymentRef || !staffName || !ticketType || selectedSeatsCount === 0) {
+      console.log("Form validation failed:", { name, paymentRef, staffName, ticketType, selectedSeatsCount });
+      alert("Please fill in all fields, select ticket type, and select at least one seat.");
       return;
     }
     
     console.log("Form data being submitted:", {
       name,
       staffName,
+      ticketType,
       paymentRef,
       selectedSeatsCount,
       seats: (reservedSeats || []).map(formatSeatLabel),
@@ -107,6 +117,7 @@ class RegistrationForm extends Component {
     this.props.onSubmit({
       name,
       staffName,
+      ticketType,
       paymentRef,
       selectedSeatsCount,
       seats: (reservedSeats || []).map(formatSeatLabel),
@@ -116,9 +127,8 @@ class RegistrationForm extends Component {
     this.setState({
       name: '',
       staffName: '',
-      paymentType: '',
+      ticketType: '',
       paymentRef: '',
-      price: '',
     });
   };
   
@@ -127,13 +137,14 @@ class RegistrationForm extends Component {
   };
 
   render() {
-    const { name, paymentRef, staffName } = this.state;
+    const { name, paymentRef, staffName, ticketType } = this.state;
     const { selectedSeatsCount, reservedSeats } = this.props;
 
     // Progressive form logic - enable fields step by step
     const isNameComplete = name && name.trim().length > 0;
     const isStaffComplete = isNameComplete && staffName && staffName.trim().length > 0;
-    const isSeatsComplete = isStaffComplete && selectedSeatsCount > 0;
+    const isTicketTypeComplete = isStaffComplete && ticketType;
+    const isSeatsComplete = isTicketTypeComplete && selectedSeatsCount > 0;
     const isPaymentRefComplete = paymentRef && paymentRef.trim().length > 0;
     const isFormComplete = isSeatsComplete && isPaymentRefComplete;
 
@@ -195,12 +206,38 @@ class RegistrationForm extends Component {
           <option value="Yeo Lih Yong" style={{backgroundColor: '#333', color: 'white'}}>Yeo Lih Yong</option>
         </select>
 
-        {/* Step 3: Seat Selection - enabled after staff is complete */}
+        {/* Step 3: Ticket Type - radio buttons enabled after staff is complete */}
+        <div className="ticket-type-container" style={{ 
+          opacity: isStaffComplete ? 1 : 0.5,
+          transition: 'opacity 0.3s ease'
+        }}>
+          <label className="info-label">Ticket Type</label>
+          <div className="ticket-type-options">
+            {TICKET_TYPES.map(type => (
+              <div key={type} className="ticket-type-wrapper">
+                <label className="ticket-type-radio-label">
+                  <input
+                    type="radio"
+                    name="ticketType"
+                    value={type}
+                    checked={ticketType === type}
+                    onChange={this.handleTicketTypeChange}
+                    disabled={!isStaffComplete}
+                    required
+                  />
+                  <span>{type}</span>
+                </label>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Step 4: Seat Selection - enabled after ticket type is complete */}
         <div style={{ 
           display: 'flex', 
           alignItems: 'flex-end', 
           gap: 16,
-          opacity: isStaffComplete ? 1 : 0.5,
+          opacity: isTicketTypeComplete ? 1 : 0.5,
           transition: 'opacity 0.3s ease'
         }}>
           <div style={{ flex: 1 }}>
@@ -228,23 +265,23 @@ class RegistrationForm extends Component {
           </div>
           <button
             type="button"
-            disabled={!isStaffComplete}
+            disabled={!isTicketTypeComplete}
             style={{
               fontSize: '1.2rem',
               padding: '10px 16px',
-              background: isStaffComplete ? '#4efa85' : '#666',
-              color: isStaffComplete ? '#222' : '#999',
+              background: isTicketTypeComplete ? '#4efa85' : '#666',
+              color: isTicketTypeComplete ? '#222' : '#999',
               border: 'none',
               borderRadius: '4px',
-              cursor: isStaffComplete ? 'pointer' : 'not-allowed',
-              opacity: isStaffComplete ? 1 : 0.6,
+              cursor: isTicketTypeComplete ? 'pointer' : 'not-allowed',
+              opacity: isTicketTypeComplete ? 1 : 0.6,
               height: '44px',
               flexShrink: 0,
               minWidth: '120px',
               transition: 'all 0.3s ease'
             }}
             onClick={this.props.onAutoSelectSeats}
-            title={isStaffComplete ? "Open seating plan to select seats" : "Complete staff selection first"}
+            title={isTicketTypeComplete ? "Open seating plan to select seats" : "Complete ticket type selection first"}
           >
             Get Seat(s)
           </button>
@@ -257,7 +294,7 @@ class RegistrationForm extends Component {
           </div>
         )}
 
-        {/* Step 4: Payment Reference - enabled after seats are selected */}
+        {/* Step 5: Payment Reference - enabled after seats are selected */}
         <label style={{ 
           fontSize: '1.5rem',
           opacity: isSeatsComplete ? 1 : 0.5,
@@ -286,7 +323,7 @@ class RegistrationForm extends Component {
           />
         </label>
 
-        {/* Step 5: Submit - enabled when all fields are complete */}
+        {/* Step 6: Submit - enabled when all fields are complete */}
         <button 
           type="submit" 
           disabled={!isFormComplete || this.props.selectedSeatsCount === 0} 

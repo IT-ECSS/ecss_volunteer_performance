@@ -60,6 +60,7 @@ router.post('/', async function(req, res, next)
             time: record.time,
             bookingNo: record.bookingNo,
             paymentRef: record.paymentRef,
+            ticketType: record.ticketType,
             seats: []
           };
         }
@@ -79,6 +80,7 @@ router.post('/', async function(req, res, next)
         time: group.time,
         bookingNo: group.bookingNo,
         paymentRef: group.paymentRef,
+        ticketType: group.ticketType,
         seats: seatsToRangesByRow(group.seats)
       }));
 
@@ -146,6 +148,7 @@ router.post('/', async function(req, res, next)
             time: record.time,
             bookingNo: record.bookingNo,
             paymentRef: record.paymentRef,
+            ticketType: record.ticketType,
             seats: []
           };
         }
@@ -165,6 +168,7 @@ router.post('/', async function(req, res, next)
         time: group.time,
         bookingNo: group.bookingNo,
         paymentRef: group.paymentRef,
+        ticketType: group.ticketType,
         seats: seatsToRangesByRow(group.seats)
       }));
 

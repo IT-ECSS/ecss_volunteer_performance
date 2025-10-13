@@ -147,17 +147,23 @@ class ReceiptGenerator
        .text(`${record.paymentRef}`, 235, 380);
       
       doc.fontSize(15).font('Arial').fillColor('black')
-       .text(`Ticket Price:`, 100, 400);
+       .text(`Ticket Type:`, 100, 405);
+      doc.fontSize(15).font('Arial Bold').fillColor('black')
+       .text(`${record.ticketType || 'N/A'}`, 185, 405);
+      
+      doc.fontSize(15).font('Arial').fillColor('black')
+       .text(`Ticket Price:`, 100, 425);
       // With this conditional logic:
       doc.fontSize(15).font('Arial Bold').fillColor('black');
-      doc.text(`$35`, 185, 400);
+      doc.text(`$35`, 185, 425);
       // Generate QR code with booking details as JSON
       try {
         // Create JSON data for QR code containing booking details and seat number
         const qrData = {
           bookingNumber: record.bookingNo,
           bookingReference: record.paymentRef,
-          seatNumber: seatNumber
+          seatNumber: seatNumber,
+          ticketType: record.ticketType
         };
         
         const qrCodeData = await QRCode.toDataURL(JSON.stringify(qrData), {
@@ -171,9 +177,9 @@ class ReceiptGenerator
         
         // Convert base64 to buffer and add to PDF (centered horizontally, below ticket details)
         const qrBuffer = Buffer.from(qrCodeData.split(',')[1], 'base64');
-        const qrSize = 200;
+        const qrSize = 190;
         const centerX = (doc.page.width - qrSize) / 2;
-        doc.image(qrBuffer, centerX, 425, { width: qrSize, height: qrSize });
+        doc.image(qrBuffer, centerX, 450, { width: qrSize, height: qrSize });
       } catch (qrError) {
         console.log('QR code generation failed:', qrError);
       }

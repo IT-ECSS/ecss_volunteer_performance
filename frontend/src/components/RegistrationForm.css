@@ -91,9 +91,22 @@
   margin-bottom: 16px;
 }
 
+/* Style for ticket type container - centered */
+.ticket-type-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
 /* Style for the section label */
 .payment-method-container > label:first-child {
   align-self: flex-start;
+  margin-bottom: 12px;
+  font-weight: 600;
+}
+
+.ticket-type-container .info-label {
   margin-bottom: 12px;
   font-weight: 600;
 }
@@ -106,6 +119,24 @@
   width: 100%;
 }
 
+/* Ticket type options - side by side */
+.ticket-type-options {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+  width: 100%;
+  flex-wrap: nowrap;
+}
+
+/* Wrapper for each ticket type option */
+.ticket-type-wrapper {
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+}
+
 /* Each radio button and its label in a row */
 .payment-options-row label {
   display: flex;
@@ -114,8 +145,32 @@
   margin: 0;
 }
 
-.payment-options-row input[type="radio"] {
-  margin-right: 8px;
+.ticket-type-radio-label {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  margin: 0;
+  cursor: pointer;
+  white-space: nowrap;
+  gap: 8px;
+  min-width: fit-content;
+}
+
+.payment-options-row input[type="radio"],
+.ticket-type-radio-label input[type="radio"] {
+  margin: 0;
+  width: 18px;
+  height: 18px;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+
+.ticket-type-radio-label span {
+  font-size: 1.5rem;
+  color: white;
+  vertical-align: middle;
+  line-height: 1;
 }
 
 /* Style for selected seat count as textbox */

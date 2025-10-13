@@ -33,6 +33,7 @@ class RegistrationForm extends Component {
       location: '',
       paymentType: '',
       paymentRef: '', // <-- add this
+      ticketType: '',
     };
   }
 
@@ -45,6 +46,7 @@ class RegistrationForm extends Component {
         location: '',
         paymentType: '', // reset to default value
         paymentRef: '', // reset to default value
+        ticketType: '',
       });
     }
   }
@@ -70,11 +72,15 @@ class RegistrationForm extends Component {
     this.setState({ paymentRef: e.target.value });
   };
 
+  handleTicketTypeChange = (e) => {
+    this.setState({ ticketType: e.target.value });
+  };
+
   handleSubmit = (e) => {
     e.preventDefault();
     console.log("Submit button clicked!");
     
-    let { name, staffName, location, paymentType, paymentRef } = this.state;
+    let { name, staffName, location, paymentType, paymentRef, ticketType } = this.state;
     const { selectedSeatsCount, reservedSeats } = this.props;
     
     name = toTitleCase(name.trim());
@@ -82,13 +88,14 @@ class RegistrationForm extends Component {
     const price = (selectedSeatsCount || 0) * 35;
     
     // Check if all required fields are filled
-    if (!name || !staffName || !location || !paymentType || !paymentRef || selectedSeatsCount === 0) {
+    if (!name || !staffName || !location || !paymentType || !paymentRef || !ticketType || selectedSeatsCount === 0) {
       console.log("Missing required fields:", {
         name: !name,
         staffName: !staffName, 
         location: !location,
         paymentType: !paymentType,
         paymentRef: !paymentRef,
+        ticketType: !ticketType,
         selectedSeatsCount: selectedSeatsCount === 0
       });
       alert("Please fill in all required fields and select at least one seat.");
@@ -101,6 +108,7 @@ class RegistrationForm extends Component {
       location,
       paymentType,
       paymentRef,
+      ticketType,
       price,
       selectedSeatsCount,
       seats: (reservedSeats || []).map(formatSeatLabel),
@@ -123,11 +131,12 @@ class RegistrationForm extends Component {
       location: '',
       paymentType: '', // reset to default value
       paymentRef: '', // reset to default value
+      ticketType: '',
     });
   };
 
   render() {
-    const { name, staffName, location, paymentType, paymentRef } = this.state;
+    const { name, staffName, location, paymentType, paymentRef, ticketType } = this.state;
     const { selectedSeatsCount, reservedSeats } = this.props;
     const price = (selectedSeatsCount || 0) * 35;
 
@@ -174,6 +183,33 @@ class RegistrationForm extends Component {
               <label style={{ margin: 0, fontSize: '1.5rem' }}>{loc}</label>
             </span>
           ))}
+        </div>
+        <div style={{ fontSize: '1.5rem', marginBottom: 12, display: 'flex', alignItems: 'center' }}>
+          <label style={{ marginRight: 12, fontWeight: 600 }}>Ticket Type</label>
+          <label style={{ marginRight: 18, display: 'flex', alignItems: 'center' }}>
+            <input
+              type="radio"
+              name="ticketType"
+              value="Performers"
+              checked={ticketType === 'Performers'}
+              onChange={this.handleTicketTypeChange}
+              required
+              style={{ width: 18, height: 18, marginRight: 6 }}
+            />
+            Performers
+          </label>
+          <label style={{ display: 'flex', alignItems: 'center' }}>
+            <input
+              type="radio"
+              name="ticketType"
+              value="Guest"
+              checked={ticketType === 'Guest'}
+              onChange={this.handleTicketTypeChange}
+              required
+              style={{ width: 18, height: 18, marginRight: 6 }}
+            />
+            Guest
+          </label>
         </div>
         <div style={{ fontSize: '1.5rem', marginBottom: 12, display: 'flex', alignItems: 'center' }}>
           <label style={{ marginRight: 12, fontWeight: 600 }}>Payment Method</label>
