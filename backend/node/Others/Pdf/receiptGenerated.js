@@ -158,7 +158,7 @@ class ReceiptGenerator
       doc.text(`$35`, 185, 425);
       // Generate QR code with booking details as JSON
       try {
-        // Create JSON data for QR code containing booking details and seat number
+        // Create JSON data for QR code containing booking details and seat numberok
         const qrData = {
           bookingNumber: record.bookingNo,
           bookingReference: record.paymentRef,
