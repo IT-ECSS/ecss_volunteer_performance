@@ -12,6 +12,8 @@ var ticketSalesRouter = require('./routes/ticketSales');
 var notificationsRouter = require('./routes/notifications');
 var scannedRouter = require('./routes/scanned');
 
+//ok
+
 app.use(cors()); // Enable CORS
 app.use(logger('dev')); // HTTP request logger
 app.use(express.json()); // For parsing JSON
