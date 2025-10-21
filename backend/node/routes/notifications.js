@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
 
-// Example: Replace with your DB model if you have one
 const NotificationController = require('../Controller/Notifications/Notifications');
+
 
 router.post('/', async function(req, res) {
   try {

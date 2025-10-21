@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const fs = require('fs').promises;
 const path = require('path');
+const { sendOneSignalNotification } = require('../utils/onesignal');
 
 // Path to the scanned tickets JSON file
 const scannedTicketsPath = path.join(__dirname, '../Others/scannedTickets.json');
@@ -77,6 +78,19 @@ router.post('/', async function(req, res) {
       }
 
       console.log("Ticket Scanned:", scannedTicket);
+
+      // Send OneSignal push notification
+      try {
+        await sendOneSignalNotification({
+          title: "Ticket Scanned",
+          message: `[${seatNumber}] taken.`,
+          url: null
+        });
+        console.log("OneSignal notification sent for seat:", seatNumber);
+      } catch (error) {
+        console.error("Failed to send OneSignal notification:", error);
+        // Don't fail the request if notification fails
+      }
 
       // Emit the scanned ticket to all connected clients
       if (io) {
