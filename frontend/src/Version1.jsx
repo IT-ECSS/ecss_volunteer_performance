@@ -202,7 +202,7 @@ class Version1 extends Component {
       return seats;
     }
     // Single seat like "E10"
-    return [seatStr];
+    return tStr];
   };
 
   componentDidMount() {

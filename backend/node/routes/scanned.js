@@ -81,9 +81,14 @@ router.post('/', async function(req, res) {
 
       // Send OneSignal push notification
       try {
+        // Get current date and time
+        const now = new Date();
+        const currentDate = now.toLocaleDateString('en-GB'); // dd/mm/yyyy format
+        const currentTime = now.toLocaleTimeString('en-GB', { hour12: false }); // hh:mm:ss format
+        
         await sendOneSignalNotification({
           title: "Ticket Scanned",
-          message: `[${seatNumber}] taken.`,
+          message: `${seatNumber} taken at ${currentDate} ${currentTime}`,
           url: null
         });
         console.log("OneSignal notification sent for seat:", seatNumber);
